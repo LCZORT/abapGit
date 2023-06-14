@@ -41,6 +41,7 @@ CLASS zcl_abapgit_gui_page_commit DEFINITION
         author_name     TYPE string VALUE 'author_name',
         author_email    TYPE string VALUE 'author_email',
         new_branch_name TYPE string VALUE 'new_branch_name',
+        create_pullrequest TYPE string VALUE 'create_pullrequest',
       END OF c_id.
 
     CONSTANTS:
@@ -335,7 +336,11 @@ CLASS ZCL_ABAPGIT_GUI_PAGE_COMMIT IMPLEMENTATION.
       iv_condense    = abap_true ).
 
 
-    ro_form->command(
+    ro_form->checkbox(
+      iv_name        = c_id-create_pullrequest
+      iv_label       = 'Create a pullrequest'
+      iv_hint        = 'Check, if you want to create a pullrequest for this commit'
+      )->command(
       iv_label       = 'Commit'
       iv_cmd_type    = zif_abapgit_html_form=>c_cmd_type-input_main
       iv_action      = c_event-commit
@@ -463,7 +468,9 @@ CLASS ZCL_ABAPGIT_GUI_PAGE_COMMIT IMPLEMENTATION.
 
 
   METHOD zif_abapgit_gui_event_handler~on_event.
-    DATA lv_new_branch_name   TYPE string.
+    DATA: lv_new_branch_name   TYPE string,
+          lv_r_code            TYPE I,
+          lv_reason            TYPE string.
 
     mo_form_data = mo_form_util->normalize( ii_event->form_data( ) ).
 
@@ -500,8 +507,26 @@ CLASS ZCL_ABAPGIT_GUI_PAGE_COMMIT IMPLEMENTATION.
             io_repo   = mo_repo
             io_stage  = mo_stage ).
 
+LOOP AT mo_form_data->mt_entries ASSIGNING FIELD-SYMBOL(<fs_entry>) WHERE k = 'create_pullrequest'.
+  IF <fs_entry>-V = 'X'.
+    zcl_abapgit_services_git=>CREATE_PULL_REQUEST(
+     EXPORTING
+      io_repo   = mo_repo
+      is_commit = ms_commit
+     IMPORTING
+      ev_r_code = lv_r_code
+      ev_reason = lv_reason ).
 
-          MESSAGE 'Commit was successful' TYPE 'S'.
+IF lv_r_code = 201.
+  MESSAGE 'Commit and pull request were succesfull' TYPE 'S'.
+ELSE.
+  MESSAGE'Commit was succesfull, but the pull request could not be created' && lv_r_code && ': ' && lv_reason Type 'W'.
+ENDIF.
+
+  ELSE.
+    MESSAGE 'Commit was successful' TYPE 'S'.
+  ENDIF.
+ENDLOOP.
 
           rs_handled-state = zcl_abapgit_gui=>c_event_state-go_back_to_bookmark.
         ELSE.

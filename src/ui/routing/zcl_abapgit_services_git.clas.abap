@@ -1,47 +1,54 @@
-CLASS zcl_abapgit_services_git DEFINITION
-  PUBLIC
-  FINAL
-  CREATE PUBLIC .
+class ZCL_ABAPGIT_SERVICES_GIT definition
+  public
+  final
+  create public .
 
-  PUBLIC SECTION.
-    CLASS-METHODS pull
-      IMPORTING
-        !iv_key TYPE zif_abapgit_persistence=>ty_repo-key
-      RAISING
-        zcx_abapgit_exception.
-    CLASS-METHODS create_branch
-      IMPORTING
-        !iv_key TYPE zif_abapgit_persistence=>ty_repo-key
-      RAISING
-        zcx_abapgit_exception.
-    CLASS-METHODS switch_branch
-      IMPORTING
-        !iv_key TYPE zif_abapgit_persistence=>ty_repo-key
-      RAISING
-        zcx_abapgit_exception.
-    CLASS-METHODS delete_branch
-      IMPORTING
-        !iv_key TYPE zif_abapgit_persistence=>ty_repo-key
-      RAISING
-        zcx_abapgit_exception.
-    CLASS-METHODS delete_tag
-      IMPORTING
-        !iv_key TYPE zif_abapgit_persistence=>ty_repo-key
-      RAISING
-        zcx_abapgit_exception.
-    CLASS-METHODS switch_tag
-      IMPORTING
-        !iv_key TYPE zif_abapgit_persistence=>ty_repo-key
-      RAISING
-        zcx_abapgit_exception.
-    CLASS-METHODS commit
-      IMPORTING
-        !io_repo   TYPE REF TO zcl_abapgit_repo_online
-        !is_commit TYPE zif_abapgit_services_git=>ty_commit_fields
-        !io_stage  TYPE REF TO zcl_abapgit_stage
-      RAISING
-        zcx_abapgit_exception.
+public section.
 
+  class-methods PULL
+    importing
+      !IV_KEY type ZIF_ABAPGIT_PERSISTENCE=>TY_REPO-KEY
+    raising
+      ZCX_ABAPGIT_EXCEPTION .
+  class-methods CREATE_BRANCH
+    importing
+      !IV_KEY type ZIF_ABAPGIT_PERSISTENCE=>TY_REPO-KEY
+    raising
+      ZCX_ABAPGIT_EXCEPTION .
+  class-methods SWITCH_BRANCH
+    importing
+      !IV_KEY type ZIF_ABAPGIT_PERSISTENCE=>TY_REPO-KEY
+    raising
+      ZCX_ABAPGIT_EXCEPTION .
+  class-methods DELETE_BRANCH
+    importing
+      !IV_KEY type ZIF_ABAPGIT_PERSISTENCE=>TY_REPO-KEY
+    raising
+      ZCX_ABAPGIT_EXCEPTION .
+  class-methods DELETE_TAG
+    importing
+      !IV_KEY type ZIF_ABAPGIT_PERSISTENCE=>TY_REPO-KEY
+    raising
+      ZCX_ABAPGIT_EXCEPTION .
+  class-methods SWITCH_TAG
+    importing
+      !IV_KEY type ZIF_ABAPGIT_PERSISTENCE=>TY_REPO-KEY
+    raising
+      ZCX_ABAPGIT_EXCEPTION .
+  class-methods COMMIT
+    importing
+      !IO_REPO type ref to ZCL_ABAPGIT_REPO_ONLINE
+      !IS_COMMIT type ZIF_ABAPGIT_SERVICES_GIT=>TY_COMMIT_FIELDS
+      !IO_STAGE type ref to ZCL_ABAPGIT_STAGE
+    raising
+      ZCX_ABAPGIT_EXCEPTION .
+  class-methods CREATE_PULL_REQUEST
+    importing
+      !IO_REPO type ref to ZCL_ABAPGIT_REPO_ONLINE
+      !IS_COMMIT type ZIF_ABAPGIT_SERVICES_GIT=>TY_COMMIT_FIELDS
+    exporting
+      !EV_R_CODE type I
+      !EV_REASON type STRING .
   PROTECTED SECTION.
   PRIVATE SECTION.
 
@@ -49,7 +56,7 @@ ENDCLASS.
 
 
 
-CLASS zcl_abapgit_services_git IMPLEMENTATION.
+CLASS ZCL_ABAPGIT_SERVICES_GIT IMPLEMENTATION.
 
 
   METHOD commit.
@@ -129,6 +136,56 @@ CLASS zcl_abapgit_services_git IMPLEMENTATION.
     MESSAGE lv_msg TYPE 'S'.
 
   ENDMETHOD.
+
+
+  method CREATE_PULL_REQUEST.
+
+DATA: lo_http_client TYPE REF TO if_http_client,
+      lv_url TYPE string,
+      lv_body Type string,
+      lv_authorization Type string,
+      lt_string_parts TYPE TABLE OF string,
+      lv_workspace Type string,
+      lv_repo Type string,
+      lv_branch Type string.
+
+*Url und benoetigte authorization holen
+lv_url = io_repo->get_url( ).
+lv_authorization = zcl_abapgit_login_manager=>load( lv_url ).
+
+*Aufbereiten der URL
+Split lv_url AT '/' INTO TABLE lt_string_parts.
+lv_workspace = lt_string_parts[ 4 ].
+lv_repo = lt_string_parts[ 5 ].
+Clear lt_string_parts.
+lv_url = 'https://api.bitbucket.org/2.0/repositories/' && lv_workspace && '/' && lv_repo && '/pullrequests'.
+
+*Branchname nehmen und aufbereiten
+lv_repo = IO_REPO->GET_SELECTED_BRANCH( ).
+Split lv_repo AT '/' INTO TABLE lt_string_parts.
+lv_branch = lt_string_parts[ 3 ].
+
+
+lv_body = '{"title": "' && is_commit-comment && '", "description": "' && is_commit-BODY && '", "source": {"branch": {"name": "' && lv_branch &&'"}}}'.
+
+*Erstellen des http client
+cl_http_client=>create_by_url( EXPORTING
+                                url = lv_url
+                               IMPORTING
+                                client = lo_http_client ).
+
+lo_http_client->request->set_method( if_http_request=>co_request_method_post ).
+lo_http_client->request->set_header_field( name  = 'Content-Type'  value = 'application/json' ).
+lo_http_client->request->set_header_field( name  = 'Authorization' value = lv_authorization ).
+LO_HTTP_CLIENT->REQUEST->APPEND_CDATA( lv_body ).
+
+*Senden des Requests und empfangen
+lo_http_client->send( ).
+LO_HTTP_CLIENT->RECEIVE( ).
+lo_http_client->response->get_status( IMPORTING
+                                        code = ev_r_code
+                                        reason = ev_reason ).
+  endmethod.
 
 
   METHOD delete_branch.
