@@ -1,192 +1,201 @@
-INTERFACE zif_abapgit_persist_user
-  PUBLIC .
+interface ZIF_ABAPGIT_PERSIST_USER
+  public .
 
-  TYPES ty_favorites TYPE zif_abapgit_persistence=>ty_repo_keys .
 
-  METHODS get_changes_only
-    RETURNING
-      VALUE(rv_changes_only) TYPE abap_bool
-    RAISING
-      zcx_abapgit_exception .
-  METHODS get_default_git_user_email
-    RETURNING
-      VALUE(rv_email) TYPE string
-    RAISING
-      zcx_abapgit_exception .
-  METHODS get_default_git_user_name
-    RETURNING
-      VALUE(rv_username) TYPE string
-    RAISING
-      zcx_abapgit_exception .
-  METHODS get_diff_unified
-    RETURNING
-      VALUE(rv_diff_unified) TYPE abap_bool
-    RAISING
-      zcx_abapgit_exception .
-  METHODS get_favorites
-    RETURNING
-      VALUE(rt_favorites) TYPE ty_favorites
-    RAISING
-      zcx_abapgit_exception .
-  METHODS get_hide_files
-    RETURNING
-      VALUE(rv_hide) TYPE abap_bool
-    RAISING
-      zcx_abapgit_exception .
-  METHODS get_show_folders
-    RETURNING
-      VALUE(rv_folders) TYPE abap_bool
-    RAISING
-      zcx_abapgit_exception .
-  METHODS get_repo_git_user_email
-    IMPORTING
-      !iv_url         TYPE zif_abapgit_persistence=>ty_repo-url
-    RETURNING
-      VALUE(rv_email) TYPE string
-    RAISING
-      zcx_abapgit_exception .
-  METHODS get_repo_git_user_name
-    IMPORTING
-      !iv_url            TYPE zif_abapgit_persistence=>ty_repo-url
-    RETURNING
-      VALUE(rv_username) TYPE string
-    RAISING
-      zcx_abapgit_exception .
-  METHODS get_repo_last_change_seen
-    IMPORTING
-      !iv_url           TYPE zif_abapgit_persistence=>ty_repo-url
-    RETURNING
-      VALUE(rv_version) TYPE string
-    RAISING
-      zcx_abapgit_exception .
-  METHODS get_repo_login
-    IMPORTING
-      !iv_url         TYPE zif_abapgit_persistence=>ty_repo-url
-    RETURNING
-      VALUE(rv_login) TYPE string
-    RAISING
-      zcx_abapgit_exception .
-  METHODS get_repo_show
-    RETURNING
-      VALUE(rv_key) TYPE zif_abapgit_persistence=>ty_repo-key
-    RAISING
-      zcx_abapgit_exception .
-  METHODS is_favorite_repo
-    IMPORTING
-      !iv_repo_key  TYPE zif_abapgit_persistence=>ty_repo-key
-    RETURNING
-      VALUE(rv_yes) TYPE abap_bool
-    RAISING
-      zcx_abapgit_exception .
-  METHODS set_default_git_user_email
-    IMPORTING
-      !iv_email TYPE string
-    RAISING
-      zcx_abapgit_exception .
-  METHODS set_default_git_user_name
-    IMPORTING
-      !iv_username TYPE string
-    RAISING
-      zcx_abapgit_exception .
-  METHODS set_repo_git_user_email
-    IMPORTING
-      !iv_url   TYPE zif_abapgit_persistence=>ty_repo-url
-      !iv_email TYPE string
-    RAISING
-      zcx_abapgit_exception .
-  METHODS set_repo_git_user_name
-    IMPORTING
-      !iv_url      TYPE zif_abapgit_persistence=>ty_repo-url
-      !iv_username TYPE string
-    RAISING
-      zcx_abapgit_exception .
-  METHODS set_repo_last_change_seen
-    IMPORTING
-      !iv_url     TYPE zif_abapgit_persistence=>ty_repo-url
-      !iv_version TYPE string
-    RAISING
-      zcx_abapgit_exception .
-  METHODS set_repo_login
-    IMPORTING
-      !iv_url   TYPE zif_abapgit_persistence=>ty_repo-url
-      !iv_login TYPE string
-    RAISING
-      zcx_abapgit_exception .
-  METHODS set_repo_show
-    IMPORTING
-      !iv_key TYPE zif_abapgit_persistence=>ty_repo-key
-    RAISING
-      zcx_abapgit_exception .
-  METHODS toggle_changes_only
-    RETURNING
-      VALUE(rv_changes_only) TYPE abap_bool
-    RAISING
-      zcx_abapgit_exception .
-  METHODS get_order_by
-    RETURNING
-      VALUE(rv_order_by) TYPE string
-    RAISING
-      zcx_abapgit_exception.
-  METHODS set_order_by
-    IMPORTING
-      iv_order_by        TYPE string
-    RETURNING
-      VALUE(rv_order_by) TYPE string
-    RAISING
-      zcx_abapgit_exception.
-  METHODS get_order_descending
-    RETURNING
-      VALUE(rv_order_descending) TYPE abap_bool
-    RAISING
-      zcx_abapgit_exception.
-  METHODS set_order_descending
-    IMPORTING
-      iv_order_descending        TYPE abap_bool
-    RETURNING
-      VALUE(rv_order_descending) TYPE abap_bool
-    RAISING
-      zcx_abapgit_exception.
-  METHODS get_diff_first
-    RETURNING
-      VALUE(rv_diff_first) TYPE abap_bool
-    RAISING
-      zcx_abapgit_exception.
-  METHODS set_diff_first
-    IMPORTING
-      iv_diff_first        TYPE abap_bool
-    RETURNING
-      VALUE(rv_diff_first) TYPE abap_bool
-    RAISING
-      zcx_abapgit_exception.
-  METHODS toggle_diff_unified
-    RETURNING
-      VALUE(rv_diff_unified) TYPE abap_bool
-    RAISING
-      zcx_abapgit_exception .
-  METHODS toggle_favorite
-    IMPORTING
-      !iv_repo_key TYPE zif_abapgit_persistence=>ty_repo-key
-    RAISING
-      zcx_abapgit_exception .
-  METHODS toggle_hide_files
-    RETURNING
-      VALUE(rv_hide) TYPE abap_bool
-    RAISING
-      zcx_abapgit_exception .
-  METHODS toggle_show_folders
-    RETURNING
-      VALUE(rv_folders) TYPE abap_bool
-    RAISING
-      zcx_abapgit_exception.
-  METHODS get_settings
-    RETURNING
-      VALUE(rs_user_settings) TYPE zif_abapgit_definitions=>ty_s_user_settings
-    RAISING
-      zcx_abapgit_exception.
-  METHODS set_settings
-    IMPORTING
-      is_user_settings TYPE zif_abapgit_definitions=>ty_s_user_settings
-    RAISING
-      zcx_abapgit_exception.
+  types TY_FAVORITES type ZIF_ABAPGIT_PERSISTENCE=>TY_REPO_KEYS .
 
-ENDINTERFACE.
+  methods GET_CHANGES_ONLY
+    returning
+      value(RV_CHANGES_ONLY) type ABAP_BOOL
+    raising
+      ZCX_ABAPGIT_EXCEPTION .
+  methods GET_DEFAULT_GIT_USER_EMAIL
+    returning
+      value(RV_EMAIL) type STRING
+    raising
+      ZCX_ABAPGIT_EXCEPTION .
+  methods GET_DEFAULT_GIT_USER_NAME
+    returning
+      value(RV_USERNAME) type STRING
+    raising
+      ZCX_ABAPGIT_EXCEPTION .
+  methods GET_DIFF_UNIFIED
+    returning
+      value(RV_DIFF_UNIFIED) type ABAP_BOOL
+    raising
+      ZCX_ABAPGIT_EXCEPTION .
+  methods GET_FAVORITES
+    returning
+      value(RT_FAVORITES) type TY_FAVORITES
+    raising
+      ZCX_ABAPGIT_EXCEPTION .
+  methods GET_HIDE_FILES
+    returning
+      value(RV_HIDE) type ABAP_BOOL
+    raising
+      ZCX_ABAPGIT_EXCEPTION .
+  methods GET_SHOW_FOLDERS
+    returning
+      value(RV_FOLDERS) type ABAP_BOOL
+    raising
+      ZCX_ABAPGIT_EXCEPTION .
+  methods GET_REPO_GIT_USER_EMAIL
+    importing
+      !IV_URL type ZIF_ABAPGIT_PERSISTENCE=>TY_REPO-URL
+    returning
+      value(RV_EMAIL) type STRING
+    raising
+      ZCX_ABAPGIT_EXCEPTION .
+  methods GET_REPO_GIT_USER_NAME
+    importing
+      !IV_URL type ZIF_ABAPGIT_PERSISTENCE=>TY_REPO-URL
+    returning
+      value(RV_USERNAME) type STRING
+    raising
+      ZCX_ABAPGIT_EXCEPTION .
+  methods GET_REPO_LAST_CHANGE_SEEN
+    importing
+      !IV_URL type ZIF_ABAPGIT_PERSISTENCE=>TY_REPO-URL
+    returning
+      value(RV_VERSION) type STRING
+    raising
+      ZCX_ABAPGIT_EXCEPTION .
+  methods GET_REPO_LOGIN
+    importing
+      !IV_URL type ZIF_ABAPGIT_PERSISTENCE=>TY_REPO-URL
+    returning
+      value(RV_LOGIN) type STRING
+    raising
+      ZCX_ABAPGIT_EXCEPTION .
+  methods GET_REPO_SHOW
+    returning
+      value(RV_KEY) type ZIF_ABAPGIT_PERSISTENCE=>TY_REPO-KEY
+    raising
+      ZCX_ABAPGIT_EXCEPTION .
+  methods IS_FAVORITE_REPO
+    importing
+      !IV_REPO_KEY type ZIF_ABAPGIT_PERSISTENCE=>TY_REPO-KEY
+    returning
+      value(RV_YES) type ABAP_BOOL
+    raising
+      ZCX_ABAPGIT_EXCEPTION .
+  methods SET_DEFAULT_GIT_USER_EMAIL
+    importing
+      !IV_EMAIL type STRING
+    raising
+      ZCX_ABAPGIT_EXCEPTION .
+  methods SET_DEFAULT_GIT_USER_NAME
+    importing
+      !IV_USERNAME type STRING
+    raising
+      ZCX_ABAPGIT_EXCEPTION .
+  methods SET_REPO_GIT_USER_EMAIL
+    importing
+      !IV_URL type ZIF_ABAPGIT_PERSISTENCE=>TY_REPO-URL
+      !IV_EMAIL type STRING
+    raising
+      ZCX_ABAPGIT_EXCEPTION .
+  methods SET_REPO_GIT_USER_NAME
+    importing
+      !IV_URL type ZIF_ABAPGIT_PERSISTENCE=>TY_REPO-URL
+      !IV_USERNAME type STRING
+    raising
+      ZCX_ABAPGIT_EXCEPTION .
+  methods SET_REPO_LAST_CHANGE_SEEN
+    importing
+      !IV_URL type ZIF_ABAPGIT_PERSISTENCE=>TY_REPO-URL
+      !IV_VERSION type STRING
+    raising
+      ZCX_ABAPGIT_EXCEPTION .
+  methods SET_REPO_LOGIN
+    importing
+      !IV_URL type ZIF_ABAPGIT_PERSISTENCE=>TY_REPO-URL
+      !IV_LOGIN type STRING
+    raising
+      ZCX_ABAPGIT_EXCEPTION .
+  methods SET_REPO_SHOW
+    importing
+      !IV_KEY type ZIF_ABAPGIT_PERSISTENCE=>TY_REPO-KEY
+    raising
+      ZCX_ABAPGIT_EXCEPTION .
+  methods TOGGLE_CHANGES_ONLY
+    returning
+      value(RV_CHANGES_ONLY) type ABAP_BOOL
+    raising
+      ZCX_ABAPGIT_EXCEPTION .
+  methods GET_ORDER_BY
+    returning
+      value(RV_ORDER_BY) type STRING
+    raising
+      ZCX_ABAPGIT_EXCEPTION .
+  methods SET_ORDER_BY
+    importing
+      !IV_ORDER_BY type STRING
+    returning
+      value(RV_ORDER_BY) type STRING
+    raising
+      ZCX_ABAPGIT_EXCEPTION .
+  methods GET_ORDER_DESCENDING
+    returning
+      value(RV_ORDER_DESCENDING) type ABAP_BOOL
+    raising
+      ZCX_ABAPGIT_EXCEPTION .
+  methods SET_ORDER_DESCENDING
+    importing
+      !IV_ORDER_DESCENDING type ABAP_BOOL
+    returning
+      value(RV_ORDER_DESCENDING) type ABAP_BOOL
+    raising
+      ZCX_ABAPGIT_EXCEPTION .
+  methods GET_DIFF_FIRST
+    returning
+      value(RV_DIFF_FIRST) type ABAP_BOOL
+    raising
+      ZCX_ABAPGIT_EXCEPTION .
+  methods SET_DIFF_FIRST
+    importing
+      !IV_DIFF_FIRST type ABAP_BOOL
+    returning
+      value(RV_DIFF_FIRST) type ABAP_BOOL
+    raising
+      ZCX_ABAPGIT_EXCEPTION .
+  methods TOGGLE_DIFF_UNIFIED
+    returning
+      value(RV_DIFF_UNIFIED) type ABAP_BOOL
+    raising
+      ZCX_ABAPGIT_EXCEPTION .
+  methods TOGGLE_FAVORITE
+    importing
+      !IV_REPO_KEY type ZIF_ABAPGIT_PERSISTENCE=>TY_REPO-KEY
+    raising
+      ZCX_ABAPGIT_EXCEPTION .
+  methods TOGGLE_HIDE_FILES
+    returning
+      value(RV_HIDE) type ABAP_BOOL
+    raising
+      ZCX_ABAPGIT_EXCEPTION .
+  methods TOGGLE_SHOW_FOLDERS
+    returning
+      value(RV_FOLDERS) type ABAP_BOOL
+    raising
+      ZCX_ABAPGIT_EXCEPTION .
+  methods GET_SETTINGS
+    returning
+      value(RS_USER_SETTINGS) type ZIF_ABAPGIT_DEFINITIONS=>TY_S_USER_SETTINGS
+    raising
+      ZCX_ABAPGIT_EXCEPTION .
+  methods SET_SETTINGS
+    importing
+      !IS_USER_SETTINGS type ZIF_ABAPGIT_DEFINITIONS=>TY_S_USER_SETTINGS
+    raising
+      ZCX_ABAPGIT_EXCEPTION .
+  methods GET_LAST_BRANCH
+    importing
+      !IV_URL type ZIF_ABAPGIT_PERSISTENCE=>TY_REPO-URL
+    exporting
+      !RV_LAST_BRANCH type STRING .
+  methods SET_LAST_BRANCH
+    importing
+      !IV_URL type ZIF_ABAPGIT_PERSISTENCE=>TY_REPO-URL
+      !IV_BRANCH type STRING .
+endinterface.

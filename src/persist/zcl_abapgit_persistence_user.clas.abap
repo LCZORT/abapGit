@@ -29,6 +29,7 @@ CLASS zcl_abapgit_persistence_user DEFINITION
         login            TYPE string,
         git_user         TYPE zif_abapgit_git_definitions=>ty_git_user,
         last_change_seen TYPE string,
+        last_branch      TYPE string,
       END OF ty_repo_config .
     TYPES:
       ty_repo_configs TYPE STANDARD TABLE OF ty_repo_config WITH DEFAULT KEY .
@@ -87,7 +88,7 @@ ENDCLASS.
 
 
 
-CLASS zcl_abapgit_persistence_user IMPLEMENTATION.
+CLASS ZCL_ABAPGIT_PERSISTENCE_USER IMPLEMENTATION.
 
 
   METHOD constructor.
@@ -243,6 +244,11 @@ CLASS zcl_abapgit_persistence_user IMPLEMENTATION.
   ENDMETHOD.
 
 
+  method ZIF_ABAPGIT_PERSIST_USER~GET_LAST_BRANCH.
+    rv_last_branch = read_repo_config( iv_url )-last_branch.
+  endmethod.
+
+
   METHOD zif_abapgit_persist_user~get_order_by.
     rv_order_by = ms_user-order_by.
   ENDMETHOD.
@@ -348,6 +354,17 @@ CLASS zcl_abapgit_persistence_user IMPLEMENTATION.
     update( ).
     rv_diff_first = ms_user-diff_first.
   ENDMETHOD.
+
+
+  method ZIF_ABAPGIT_PERSIST_USER~SET_LAST_BRANCH.
+    DATA: ls_repo_config TYPE TY_REPO_CONFIG.
+
+    ls_repo_config = read_repo_config( iv_url ).
+
+    ls_repo_config-last_branch = iv_branch.
+
+    update_repo_config( iv_url = iv_url is_repo_config = ls_repo_config ).
+  endmethod.
 
 
   METHOD zif_abapgit_persist_user~set_order_by.

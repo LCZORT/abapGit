@@ -256,7 +256,9 @@ lo_http_client->response->get_status( IMPORTING
   METHOD switch_branch.
 
     DATA: lo_repo   TYPE REF TO zcl_abapgit_repo_online,
-          ls_branch TYPE zif_abapgit_git_definitions=>ty_git_branch.
+          ls_branch TYPE zif_abapgit_git_definitions=>ty_git_branch,
+          lo_user   TYPE REF TO zif_abapgit_persist_user,
+          ls_settings TYPE zif_abapgit_definitions=>ty_s_user_settings.
 
 
     lo_repo ?= zcl_abapgit_repo_srv=>get_instance( )->get( iv_key ).
@@ -279,6 +281,14 @@ lo_http_client->response->get_status( IMPORTING
     ENDIF.
 
     lo_repo->select_branch( ls_branch-name ).
+
+    ls_settings = zcl_abapgit_persist_factory=>get_settings( )->read( )->get_user_settings( ).
+
+    IF ls_settings-show_last_branch = abap_true.
+      lo_user = zcl_abapgit_persistence_user=>get_instance( ).
+      lo_user->set_last_branch( iv_url = lo_repo->get_url( ) iv_branch = ls_branch-name ).
+    ENDIF.
+
     COMMIT WORK AND WAIT.
 
   ENDMETHOD.

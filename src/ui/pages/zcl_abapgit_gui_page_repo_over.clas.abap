@@ -167,7 +167,7 @@ ENDCLASS.
 
 
 
-CLASS zcl_abapgit_gui_page_repo_over IMPLEMENTATION.
+CLASS ZCL_ABAPGIT_GUI_PAGE_REPO_OVER IMPLEMENTATION.
 
 
   METHOD apply_filter.
@@ -1010,11 +1010,31 @@ CLASS zcl_abapgit_gui_page_repo_over IMPLEMENTATION.
 
     DATA lt_overview TYPE ty_overviews.
     DATA ls_settings TYPE zif_abapgit_definitions=>ty_s_user_settings.
+    DATA li_user TYPE REF TO zif_abapgit_persist_user.
+    DATA lv_last_branch TYPE string.
+    DATA lo_repo TYPE REF TO zcl_abapgit_repo_online.
 
     ls_settings = zcl_abapgit_persist_factory=>get_settings( )->read( )->get_user_settings( ).
     mo_label_colors = zcl_abapgit_repo_labels=>split_colors_into_map( ls_settings-label_colors ).
 
     lt_overview = prepare_overviews( ).
+
+    IF ls_settings-show_last_branch = abap_true.
+      li_user = zcl_abapgit_persistence_user=>get_instance( ).
+      LOOP AT lt_overview ASSIGNING FIELD-SYMBOL(<fs_repo>).
+        li_user->get_last_branch(
+          exporting
+            IV_URL         = <fs_repo>-url
+          importing
+            RV_LAST_BRANCH = lv_last_branch ).
+
+        CHECK lv_last_branch IS NOT INITIAL.
+        lo_repo ?= zcl_abapgit_repo_srv=>get_instance( )->get( <fs_repo>-key ).
+        lo_repo->select_branch( lv_last_branch ).
+        CLEAR lv_last_branch.
+      ENDLOOP.
+    ENDIF.
+
 
     CREATE OBJECT ri_html TYPE zcl_abapgit_html.
 

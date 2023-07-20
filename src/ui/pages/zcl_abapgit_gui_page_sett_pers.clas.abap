@@ -39,6 +39,7 @@ CLASS zcl_abapgit_gui_page_sett_pers DEFINITION
         hide_sapgui_hint       TYPE string VALUE 'hide_sapgui_hint',
         activate_wo_popup      TYPE string VALUE 'activate_wo_popup',
         label_colors           TYPE string VALUE 'label_colors',
+        show_last_branch       TYPE string VALUE 'show_last_branch',
       END OF c_id.
     CONSTANTS:
       BEGIN OF c_event,
@@ -120,6 +121,10 @@ CLASS ZCL_ABAPGIT_GUI_PAGE_SETT_PERS IMPLEMENTATION.
       iv_name          = c_id-show_default_repo
       iv_label         = 'Show Last Opened Repository'
       iv_hint          = 'Recommended to check, if you are using ADT'
+    )->checkbox(
+      iv_name          = c_id-show_last_branch
+      iv_label         = 'Show Last Opened Branch'
+      iv_hint          = 'Shows the last used branch from the repository'
     )->start_group(
       iv_name          = c_id-ui
       iv_label         = 'User Interface'
@@ -215,6 +220,9 @@ CLASS ZCL_ABAPGIT_GUI_PAGE_SETT_PERS IMPLEMENTATION.
     mo_form_data->set(
       iv_key = c_id-show_default_repo
       iv_val = |{ ms_settings-show_default_repo }| ).
+    mo_form_data->set(
+      iv_key = c_id-show_last_branch
+      iv_val = ms_settings-show_last_branch ).
 
     " UI
     mo_form_data->set(
@@ -324,6 +332,7 @@ CLASS ZCL_ABAPGIT_GUI_PAGE_SETT_PERS IMPLEMENTATION.
 
     " Startup
     ms_settings-show_default_repo = mo_form_data->get( c_id-show_default_repo ).
+    ms_settings-show_last_branch = mo_form_data->get( c_id-show_last_branch ).
 
     " UI
     ms_settings-ui_theme = mo_form_data->get( c_id-ui_theme ).
