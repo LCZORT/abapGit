@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_CLAS" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <VSEOCLASS>
+    <CLSNAME>ZCL_ABAPGIT_LAST_BRANCH</CLSNAME>
+    <LANGU>E</LANGU>
+    <DESCRIPT>Class for handeling the last user branch functionality</DESCRIPT>
+    <STATE>1</STATE>
+    <CLSCCINCL>X</CLSCCINCL>
+    <FIXPT>X</FIXPT>
+    <UNICODE>X</UNICODE>
+   </VSEOCLASS>
+   <DESCRIPTIONS>
+    <SEOCOMPOTX>
+     <CMPNAME>IS_LAST_BRANCH_ACTIVE</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Checks if setting last user branch is active for user.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>SET_LAST_BRANCH_LIST</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Reads the last user branch from the repo and sets it.</DESCRIPT>
+    </SEOCOMPOTX>
+   </DESCRIPTIONS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

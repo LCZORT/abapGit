@@ -73,7 +73,7 @@ ENDCLASS.
 
 
 
-CLASS zcl_abapgit_repo_online IMPLEMENTATION.
+CLASS ZCL_ABAPGIT_REPO_ONLINE IMPLEMENTATION.
 
 
   METHOD fetch_remote.
@@ -317,10 +317,16 @@ CLASS zcl_abapgit_repo_online IMPLEMENTATION.
 
 
   METHOD zif_abapgit_repo_online~select_branch.
+    DATA lo_user   TYPE REF TO zif_abapgit_persist_user.
 
     reset_remote( ).
     set( iv_branch_name     = iv_branch_name
          iv_selected_commit = space ).
+
+    IF zcl_abapgit_last_branch=>is_last_branch_active( ) = abap_true.
+      lo_user = zcl_abapgit_persistence_user=>get_instance( ).
+      lo_user->set_last_branch( iv_url = get_url( ) iv_branch = iv_branch_name ).
+    ENDIF.
 
   ENDMETHOD.
 

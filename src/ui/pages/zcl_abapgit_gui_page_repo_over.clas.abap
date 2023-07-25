@@ -167,7 +167,7 @@ ENDCLASS.
 
 
 
-CLASS zcl_abapgit_gui_page_repo_over IMPLEMENTATION.
+CLASS ZCL_ABAPGIT_GUI_PAGE_REPO_OVER IMPLEMENTATION.
 
 
   METHOD apply_filter.
@@ -1015,6 +1015,13 @@ CLASS zcl_abapgit_gui_page_repo_over IMPLEMENTATION.
     mo_label_colors = zcl_abapgit_repo_labels=>split_colors_into_map( ls_settings-label_colors ).
 
     lt_overview = prepare_overviews( ).
+
+    IF ls_settings-show_last_branch = abap_true.
+      zcl_abapgit_last_branch=>set_last_branch_list(
+        CHANGING
+          ct_overview = lt_overview
+      ).
+    ENDIF.
 
     CREATE OBJECT ri_html TYPE zcl_abapgit_html.
 
