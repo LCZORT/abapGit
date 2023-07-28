@@ -123,8 +123,8 @@ CLASS ZCL_ABAPGIT_GUI_PAGE_SETT_PERS IMPLEMENTATION.
       iv_hint          = 'Recommended to check, if you are using ADT'
     )->checkbox(
       iv_name          = c_id-show_last_branch
-      iv_label         = 'Show Last Opened User Specific Branch'
-      iv_hint          = 'Shows the last used user specific branch'
+      iv_label         = 'Use User Specific Branch'
+      iv_hint          = 'Sets the last visited branch, of your user, as the branch of the repository.'
     )->start_group(
       iv_name          = c_id-ui
       iv_label         = 'User Interface'
