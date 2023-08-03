@@ -240,19 +240,19 @@ CLASS ZCL_ABAPGIT_OBJECTS_CHECK IMPLEMENTATION.
           WHEN ' A' OR 'D ' OR 'DM'. " added remotely or deleted locally
             <ls_changes>-action = zif_abapgit_objects=>c_deserialize_action-add.
             <ls_changes>-icon   = icon_create.
-            <ls_changes>-text   = 'Add local object'.
+            <ls_changes>-text   = '@8R@ Add local object: This will change the system state for everyone '.
           WHEN 'A ' OR ' D' OR 'MD'. " added locally or deleted remotely
             <ls_changes>-action = zif_abapgit_objects=>c_deserialize_action-delete.
             <ls_changes>-icon   = icon_delete.
-            <ls_changes>-text   = 'Delete local object'.
+            <ls_changes>-text   = '@8R@ Delete local object: This will change the system state for everyone'.
           WHEN 'M ' OR 'MM'. " modified locally
             <ls_changes>-action = zif_abapgit_objects=>c_deserialize_action-overwrite.
             <ls_changes>-icon   = icon_change.
-            <ls_changes>-text   = 'Overwrite local object'.
+            <ls_changes>-text   = '@8R@ Overwrite local object: This will change the system state for everyone'.
           WHEN ' M'. " modified only remotely
             <ls_changes>-action = zif_abapgit_objects=>c_deserialize_action-update.
             <ls_changes>-icon   = icon_change.
-            <ls_changes>-text   = 'Update local object'.
+            <ls_changes>-text   = '@8R@ Update local object: This will change the system state for everyone'.
           WHEN OTHERS.
             ASSERT 0 = 1.
         ENDCASE.
@@ -363,7 +363,7 @@ CLASS ZCL_ABAPGIT_OBJECTS_CHECK IMPLEMENTATION.
         ls_overwrite-devclass = ls_tadir-devclass.
         ls_overwrite-action   = zif_abapgit_objects=>c_deserialize_action-overwrite.
         ls_overwrite-icon     = icon_change.
-        ls_overwrite-text     = 'Overwrite local object'.
+        ls_overwrite-text     = '@8R@ Overwrite local object: This will change the system state for everyone'.
         INSERT ls_overwrite INTO TABLE lt_overwrite_unique.
       ENDIF.
 
